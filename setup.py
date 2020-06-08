@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='gapandas',
     packages=['gapandas'],
-    version='0.1',
+    version='0.12',
     license='MIT',
     description='GAPandas is a Python package for accessing Google Analytics API data using Pandas for use in models, '
                 'reports or visualisations',
@@ -26,4 +26,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
     ],
+    install_requires=['pandas', 'google-api-python-client', 'oauth2client']
 )
