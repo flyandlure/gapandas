@@ -42,3 +42,7 @@ results = query.run_query(service, '123456789', payload, 'raw')
 
 You can run multiple queries in succession and use the Pandas `merge()` function to connect these together. Pandas also makes it very easy to write the data to a file, such as a CSV or Excel document or write it to a database. You can use the data in reports, visualisations or machine learning models with very little code.
 
+### Pagination
+If you do not define `max_results` the API will return a default of 1000 rows in a single page. You can set this to a maximum of 10000 in your payload. 
+
+Pagination is handled automatically. GAPandas will fetch each page of results and return them all in a single DataFrame (or object if you pass the `raw` flag in your query.)
