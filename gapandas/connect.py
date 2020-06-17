@@ -6,8 +6,12 @@ Description: Authenticates with the Google Analytics API using a client secrets 
 and returns a Google Analytics service for use in other functions.
 """
 
+import socket
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
+
+# Prevent "The read operation timed out" errors
+socket.setdefaulttimeout(500)
 
 
 def get_service(keyfile_path):
