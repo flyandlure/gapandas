@@ -76,9 +76,6 @@ def get_total_pages(results):
     """
 
     if results['totalResults']:
-
-        print(results['totalResults'])
-
         return math.ceil(results['totalResults'] / results['itemsPerPage'])
 
 
