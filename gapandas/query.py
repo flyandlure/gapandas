@@ -120,9 +120,9 @@ def results_to_pandas(results):
     """
 
     if results['columnHeaders']:
-        columnHeaders = results['columnHeaders']
+        column_headers = results['columnHeaders']
         headings = []
-        for header in columnHeaders:
+        for header in column_headers:
 
             name = header['name'].replace('ga:', '')
             headings.append(name)
