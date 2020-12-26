@@ -47,6 +47,6 @@ def get_service(keyfile_path, verbose=False):
 
             if verbose:
                 print('Connection failed: \
-                Check your client_secrets.json and ensure the email is in your Google Analytics account.')
+                Ensure your keyfile is correct and you have added the email to your Google Analytics account.')
 
             return e
