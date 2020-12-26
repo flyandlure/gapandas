@@ -27,7 +27,8 @@ def get_service(keyfile_path, verbose=False):
 
     try:
         credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path,
-                                                                       scopes="https://www.googleapis.com/auth/analytics.readonly")
+                                                                       scopes="https://www.googleapis.com/auth"
+                                                                              "/analytics.readonly")
         service = build("analytics", "v3", credentials=credentials)
 
         if verbose:
