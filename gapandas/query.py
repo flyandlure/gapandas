@@ -112,6 +112,193 @@ def get_column_headers(results):
         return results['columnHeaders']
 
 
+def set_dtypes(df):
+    """Sets the correct data type for each column returned in the dataframe.
+
+    :param df: Pandas dataframe from Google Analytics API query
+    :return: Pandas dataframe with correct dtypes assigned to columns
+    """
+
+    integer_dtype = ['sessionCount', 'daysSinceLastSession', 'userBucket', 'users', 'newUsers', '1dayUsers',
+                     '7dayUsers', '14dayUsers', '28dayUsers', '30dayUsers', 'sessionDurationBucket', 'sessions',
+                     'bounces', 'uniqueDimensionCombinations', 'hits', 'organicSearches', 'impressions', 'adclicks',
+                     'goal1Starts', 'goal2Starts', 'goal3Starts', 'goal4Starts', 'goal5Starts', 'goal6Starts',
+                     'goal7Starts', 'goal8Starts', 'goal9Starts', 'goal10Starts', 'goal11Starts', 'goal12Starts',
+                     'goal13Starts', 'goal14Starts', 'goal15Starts', 'goal16Starts', 'goal17Starts', 'goal18Starts',
+                     'goal19Starts', 'goal20Starts', 'goal1Completions', 'goal2Completions', 'goal3Completions',
+                     'goal4Completions', 'goal5Completions', 'goal6Completions', 'goal7Completions', 'goal8Completions',
+                     'goal9Completions', 'goal10Completions', 'goal11Completions', 'goal12Completions',
+                     'goal13Completions', 'goal14Completions', 'goal15Completions', 'goal16Completions',
+                     'goal17Completions', 'goal18Completions', 'goal19Completions', 'goal20Completions',
+                     'goalCompletionsAll', 'goalStartsAll', 'goal1Abandons', 'goal2Abandons', 'goal3Abandons',
+                     'goal4Abandons', 'goal5Abandons', 'goal6Abandons', 'goal7Abandons', 'goal8Abandons',
+                     'goal9Abandons', 'goal10Abandons', 'goal11Abandons', 'goal12Abandons', 'goal13Abandons',
+                     'goal14Abandons', 'goal15Abandons', 'goal16Abandons', 'goal17Abandons', 'goal18Abandons',
+                     'goal19Abandons', 'goal20Abandons', 'goalAbandonsAll', 'pageDepth', 'entrances', 'pageviews',
+                     'uniquePageviews', 'exits', 'searchResultViews', 'searchUniques', 'searchSessions', 'searchDepth',
+                     'searchRefinements', 'searchExits', 'pageLoadTime', 'pageLoadSample', 'domainLookupTime',
+                     'pageDownloadTime', 'redirectionTime', 'serverConnectionTime', 'serverResponseTime',
+                     'speedMetricsSample', 'domInteractiveTime', 'domContentLoadedTime', 'domLatencyMetricsSample',
+                     'screenviews', 'uniqueScreenviews', 'sessionsWithEvent', 'sessionsToTransaction',
+                     'daysToTransaction', 'transactions', 'itemQuantity', 'uniquePurchases', 'internalPromotionClicks',
+                     'internalPromotionViews', 'productAddsToCart', 'productCheckouts', 'productDetailViews',
+                     'productListClicks', 'productListViews', 'productRefunds', 'productRemovesFromCart',
+                     'quantityAddedToCart', 'quantityCheckedOut', 'quantityRefunded', 'quantityRemovedFromCart',
+                     'totalRefunds', 'socialInteractions', 'uniqueSocialInteractions', 'userTimingValue',
+                     'userTimingSample', 'exceptions', 'fatalExceptions', 'dimension1', 'dimension2', 'dimension3',
+                     'dimension4', 'dimension5', 'dimension6', 'dimension7', 'dimension8', 'dimension9', 'dimension10',
+                     'dimension11', 'dimension12', 'dimension13', 'dimension14', 'dimension15', 'dimension16',
+                     'dimension17', 'dimension18', 'dimension19', 'dimension20', 'customMetric1', 'customMetric2',
+                     'customMetric3', 'customMetric4', 'customMetric5', 'customMetric6', 'customMetric7',
+                     'customMetric8', 'customMetric9', 'customMetric10', 'customMetric11', 'customMetric12',
+                     'customMetric13', 'customMetric14', 'customMetric15', 'customMetric16', 'customMetric17',
+                     'customMetric18', 'customMetric19', 'customMetric20', 'year', 'month', 'week', 'day', 'hour',
+                     'minute', 'nthMonth', 'nthWeek', 'nthDay', 'nthMinute', 'dayOfWeek', 'isoWeek', 'isoYear',
+                     'isoYearIsoWeek', 'nthHour', 'dcmFloodlightQuantity', 'dcmClicks', 'dcmImpressions',
+                     'adsenseAdUnitsViewed', 'adsenseAdsViewed', 'adsenseAdsClicks', 'adsensePageImpressions',
+                     'adsenseExits', 'totalPublisherImpressions', 'totalPublisherMonetizedPageviews',
+                     'totalPublisherClicks', 'backfillImpressions', 'backfillMonetizedPageviews', 'backfillClicks',
+                     'dfpImpressions', 'dfpMonetizedPageviews', 'dfpClicks', 'cohortNthDay', 'cohortNthMonth',
+                     'cohortNthWeek', 'cohortActiveUsers', 'cohortTotalUsers', 'cohortTotalUsersWithLifetimeCriteria',
+                     'dbmClicks', 'dbmConversions', 'dbmImpressions', 'dsCost', 'dsImpressions'
+                     ]
+
+    float_dtype = ['percentNewSessions', 'sessionsPerUser', 'bounceRate', 'adCost', 'CPM', 'CPC', 'CTR',
+                   'costPerTransaction', 'costPerGoalConversion', 'RPC', 'ROAS', 'goal1Value', 'goal2Value',
+                   'goal3Value', 'goal4Value', 'goal5Value', 'goal6Value', 'goal7Value', 'goal8Value', 'goal9Value',
+                   'goal10Value', 'goal11Value', 'goal12Value', 'goal13Value', 'goal14Value', 'goal15Value',
+                   'goal16Value', 'goal17Value', 'goal18Value', 'goal19Value', 'goal20Value', 'goalValueAll',
+                   'goalValuePerSession', 'goal1ConversionRate', 'goal2ConversionRate', 'goal3ConversionRate',
+                   'goal4ConversionRate', 'goal5ConversionRate', 'goal6ConversionRate', 'goal7ConversionRate',
+                   'goal8ConversionRate', 'goal9ConversionRate', 'goal10ConversionRate', 'goal11ConversionRate',
+                   'goal12ConversionRate', 'goal13ConversionRate', 'goal14ConversionRate', 'goal15ConversionRate',
+                   'goal16ConversionRate', 'goal17ConversionRate', 'goal18ConversionRate', 'goal19ConversionRate',
+                   'goal20ConversionRate', 'goalConversionRateAll', 'goal1AbandonRate', 'goal2AbandonRate',
+                   'goal3AbandonRate', 'goal4AbandonRate', 'goal5AbandonRate', 'goal6AbandonRate', 'goal7AbandonRate',
+                   'goal8AbandonRate', 'goal9AbandonRate', 'goal10AbandonRate', 'goal11AbandonRate',
+                   'goal12AbandonRate', 'goal13AbandonRate', 'goal14AbandonRate', 'goal15AbandonRate',
+                   'goal16AbandonRate', 'goal17AbandonRate', 'goal18AbandonRate', 'goal19AbandonRate',
+                   'goal20AbandonRate', 'goalAbandonRateAll', 'latitude', 'longitude', 'pageValue', 'entranceRate',
+                   'pageviewsPerSession', 'exitRate', 'avgSearchResultViews', 'percentSessionsWithSearch',
+                   'avgSearchDepth', 'percentSearchRefinements', 'searchExitRate', 'searchGoalConversionRateAll',
+                   'goalValueAllPerSearch', 'searchGoal1ConversionRate', 'searchGoal2ConversionRate',
+                   'searchGoal3ConversionRate', 'searchGoal4ConversionRate', 'searchGoal5ConversionRate',
+                   'searchGoal6ConversionRate', 'searchGoal7ConversionRate', 'searchGoal8ConversionRate',
+                   'searchGoal9ConversionRate', 'searchGoal10ConversionRate', 'searchGoal11ConversionRate',
+                   'searchGoal12ConversionRate', 'searchGoal13ConversionRate', 'searchGoal14ConversionRate',
+                   'searchGoal15ConversionRate', 'searchGoal16ConversionRate', 'searchGoal17ConversionRate',
+                   'searchGoal18ConversionRate', 'searchGoal19ConversionRate', 'searchGoal20ConversionRate',
+                   'avgPageLoadTime', 'avgDomainLookupTime', 'avgPageDownloadTime', 'avgRedirectionTime',
+                   'avgServerConnectionTime', 'avgServerResponseTime', 'avgDomInteractiveTime',
+                   'avgDomContentLoadedTime', 'avgDomLatencyMetricsSample', 'screenviewsPerSession',
+                   'avgScreenviewDuration', 'eventValue', 'eventsPerSessionWithEvent', 'transactionsPerSession',
+                   'transactionRevenue', 'revenuePerTransaction', 'transactionRevenuePerSession', 'transactionShipping',
+                   'transactionTax', 'totalValue', 'revenuePerItem', 'itemRevenue', 'itemsPerPurchase',
+                   'localTransactionRevenue', 'localTransactionShipping', 'localTransactionTax', 'localItemRevenue',
+                   'buyToDetailRate', 'cartToDetailRate', 'internalPromotionCTR', 'localProductRefundAmount',
+                   'localRefundAmount', 'productListCTR', 'productRefundAmount', 'productRevenuePerPurchase',
+                   'refundAmount', 'revenuePerUser', 'transactionsPerUser', 'socialInteractionsPerSession',
+                   'avgUserTimingValue', 'exceptionsPerScreenview', 'fatalExceptionsPerScreenview',
+                   'dcmFloodlightRevenue', 'dcmCPC', 'dcmCTR', 'dcmCost', 'dcmROAS', 'dcmRPC', 'adsenseRevenue',
+                   'adsenseCTR', 'adsenseECPM', 'adsenseViewableImpressionPercent', 'adsenseCoverage',
+                   'totalPublisherCoverage', 'totalPublisherImpressionsPerSession', 'totalPublisherECPM',
+                   'totalPublisherViewableImpressionsPercent', 'totalPublisherCTR', 'totalPublisherRevenue',
+                   'totalPublisherRevenuePer1000Sessions', 'adxImpressions', 'adxMonetizedPageviews', 'adxClicks',
+                   'adxCoverage', 'adxImpressionsPerSession', 'adxViewableImpressionsPercent', 'adxCTR', 'adxRevenue',
+                   'adxRevenuePer1000Sessions', 'adxECPM', 'backfillCoverage', 'backfillImpressionsPerSession',
+                   'backfillViewableImpressionsPercent', 'backfillCTR', 'backfillRevenue', 'backfillECPM',
+                   'backfillRevenuePer1000Sessions', 'dfpCoverage', 'dfpImpressionsPerSession',
+                   'dfpViewableImpressionsPercent', 'dfpCTR', 'dfpRevenue', 'dfpRevenuePer1000Sessions', 'dfpECPM',
+                   'cohortAppviewsPerUser', 'cohortAppviewsPerUserWithLifetimeCriteria', 'cohortGoalCompletionsPerUser',
+                   'cohortGoalCompletionsPerUserWithLifetimeCriteria', 'cohortPageviewsPerUser',
+                   'cohortPageviewsPerUserWithLifetimeCriteria', 'cohortRetentionRate', 'cohortRevenuePerUser',
+                   'cohortRevenuePerUserWithLifetimeCriteria', 'cohortSessionDurationPerUser',
+                   'cohortSessionDurationPerUserWithLifetimeCriteria', 'cohortSessionsPerUser',
+                   'cohortSessionsPerUserWithLifetimeCriteria', 'dbmCPA', 'dbmCPC', 'dbmCPM', 'dbmCTR', 'dbmCost',
+                   'dbmROAS', 'dsCPC', 'dsCTR', 'dsProfit', 'dsReturnOnAdSpend', 'dsRevenuePerClick'
+                   ]
+
+    string_dtype = ['userType', 'userDefinedValue', 'referralPath', 'fullReferrer', 'campaign', 'source', 'medium',
+                    'sourceMedium', 'keyword', 'adContent', 'socialNetwork', 'hasSocialSourceReferral',
+                    'campaignCode', 'adGroup', 'adSlot', 'adDistributionNetwork', 'adMatchType',
+                    'adKeywordMatchType', 'adMatchedQuery', 'adPlacementDomain', 'adPlacementUrl', 'adFormat',
+                    'adTargetingType', 'adTargetingOption', 'adDisplayUrl', 'adDestinationUrl',
+                    'adwordsCustomerID', 'adwordsCampaignID', 'adwordsAdGroupID', 'adwordsCreativeID',
+                    'adwordsCriteriaID', 'adQueryWordCount', 'isTrueViewVideoAd', 'goalCompletionLocation',
+                    'goalPreviousStep1', 'goalPreviousStep2', 'goalPreviousStep3', 'browser', 'browserVersion',
+                    'operatingSystem', 'operatingSystemVersion', 'mobileDeviceBranding', 'mobileDeviceModel',
+                    'mobileDeviceInputSelector', 'mobileDeviceInfo', 'mobileDeviceMarketingName', 'deviceCategory',
+                    'browserSize', 'dataSource', 'continent', 'subContinent', 'country', 'region', 'metro', 'city',
+                    'networkDomain', 'cityId', 'continentId', 'countryIsoCode', 'metroId', 'regionId', 'regionIsoCode',
+                    'subContinentCode', 'flashVersion', 'javaEnabled', 'language', 'screenColors',
+                    'sourcePropertyDisplayName', 'sourcePropertyTrackingId', 'screenResolution', 'hostname', 'pagePath',
+                    'pagePathLevel1', 'pagePathLevel2', 'pagePathLevel3', 'pagePathLevel4', 'pageTitle',
+                    'landingPagePath', 'secondPagePath', 'exitPagePath', 'previousPagePath', 'searchUsed',
+                    'searchKeyword', 'searchKeywordRefinement', 'searchCategory', 'searchStartPage',
+                    'searchDestinationPage', 'searchAfterDestinationPage', 'appInstallerId', 'appVersion', 'appName',
+                    'appId', 'screenName', 'screenDepth', 'landingScreenName', 'exitScreenName', 'eventCategory',
+                    'eventAction', 'eventLabel', 'transactionId', 'affiliation', 'productSku', 'productName',
+                    'productCategory', 'currencyCode', 'checkoutOptions', 'internalPromotionCreative',
+                    'internalPromotionId', 'internalPromotionName', 'internalPromotionPosition', 'orderCouponCode',
+                    'productBrand', 'productCategoryHeirarchy', 'productCouponCode', 'productListName',
+                    'productListPosition', 'productVariant', 'shoppingStage', 'socialInteractionNetwork',
+                    'socialInteractionAction', 'socialInteractionNetworkAction', 'socialInteractionTarget',
+                    'socialEngagementType', 'userTimingCategory', 'userTimingLabel', 'userTimingVariable',
+                    'exceptionDescription', 'experimentId', 'experimentVariant', 'experimentCombination',
+                    'experimentName', 'customVarName1', 'customVarName2', 'customVarName3', 'customVarName4',
+                    'customVarName5', 'customVarName6', 'customVarName7', 'customVarName8', 'customVarName9',
+                    'customVarName10', 'customVarName11', 'customVarName12', 'customVarName13', 'customVarName14',
+                    'customVarName15', 'customVarName16', 'customVarName17', 'customVarName18', 'customVarName19',
+                    'customVarName20', 'customVarValue1', 'customVarValue2', 'customVarValue3', 'customVarValue4',
+                    'customVarValue5', 'customVarValue6', 'customVarValue7', 'customVarValue8', 'customVarValue9',
+                    'customVarValue10', 'customVarValue11', 'customVarValue12', 'customVarValue13', 'customVarValue14',
+                    'customVarValue15', 'customVarValue16', 'customVarValue17', 'customVarValue18', 'customVarValue19',
+                    'customVarValue20', 'dayOfWeekName', 'dateHour', 'dateHourMinute', 'yearMonth', 'yearWeek',
+                    'dcmClickAd', 'dcmClickAdId', 'dcmClickAdType', 'dcmClickAdTypeId', 'ga:dcmClickAdvertiser',
+                    'dcmClickAdvertiserId', 'dcmClickCampaign', 'dcmClickCampaignId', 'dcmClickCreative',
+                    'dcmClickCreativeId', 'dcmClickRenderingId', 'dcmClickCreativeType', 'dcmClickCreativeTypeId',
+                    'dcmClickCreativeVersion', 'dcmClickSite', 'dcmClickSiteId', 'dcmClickSitePlacement',
+                    'dcmClickSitePlacementId', 'dcmClickSpotId', 'dcmFloodlightActivity',
+                    'dcmFloodlightActivityAndGroup', 'dcmFloodlightActivityGroup', 'dcmFloodlightActivityGroupId',
+                    'dcmFloodlightActivityId', 'dcmFloodlightAdvertiserId', 'dcmFloodlightSpotId', 'dcmLastEventAd',
+                    'dcmLastEventAdId', 'dcmLastEventAdType', 'dcmLastEventAdTypeId', 'dcmLastEventAdvertiser',
+                    'dcmLastEventAdvertiserId', 'dcmLastEventAttributionType', 'dcmLastEventCampaign',
+                    'dcmLastEventCampaignId', 'dcmLastEventCreative', 'dcmLastEventCreativeId',
+                    'dcmLastEventRenderingId', 'dcmLastEventCreativeType', 'dcmLastEventCreativeTypeId',
+                    'dcmLastEventCreativeVersion', 'dcmLastEventSite', 'dcmLastEventSiteId',
+                    'dcmLastEventSitePlacement', 'dcmLastEventSitePlacementId', 'dcmLastEventSpotId', 'userAgeBracket',
+                    'userGender', 'interestOtherCategory', 'interestAffinityCategory', 'interestInMarketCategory',
+                    'dfpLineItemId', 'dfpLineItemName', 'acquisitionCampaign', 'acquisitionMedium', 'acquisitionSource',
+                    'acquisitionSourceMedium', 'acquisitionTrafficChannel', 'cohort', 'channelGrouping',
+                    'dbmClickAdvertiser', 'dbmClickAdvertiserId', 'dbmClickCreativeId', 'dbmClickExchange',
+                    'dbmClickExchangeId', 'dbmClickInsertionOrder', 'dbmClickInsertionOrderId', 'dbmClickLineItem',
+                    'dbmClickLineItemId', 'dbmClickSite', 'dbmClickSiteId', 'dbmLastEventAdvertiser',
+                    'dbmLastEventAdvertiserId', 'dbmLastEventCreativeId', 'dbmLastEventExchange',
+                    'dbmLastEventExchangeId', 'dbmLastEventInsertionOrder', 'dbmLastEventInsertionOrderId',
+                    'dbmLastEventLineItem', 'dbmLastEventLineItemId', 'dbmLastEventSite', 'dbmLastEventSiteId',
+                    'dsAdGroup', 'dsAdGroupId', 'dsAdvertiser', 'dsAdvertiserId', 'dsAgency', 'dsAgencyId',
+                    'dsCampaign', 'dsCampaignId', 'dsEngineAccount', 'dsEngineAccountId', 'dsKeyword', 'dsKeywordId'
+                    ]
+
+    date_dtype = ['date']
+    time_dtype = ['time', 'avgSessionDuration', 'timeOnPage', 'avgTimeOnPage', 'searchDuration', 'timeOnScreen']
+
+    for column in df.columns:
+        if column in integer_dtype:
+            df[column] = df[column].astype(int)
+        elif column in float_dtype:
+            df[column] = df[column].astype(float)
+        elif column in date_dtype:
+            df[column] = pd.to_datetime(df[column])
+        elif column in string_dtype:
+            df[column] = df[column].astype(str)
+        elif column in time_dtype:
+            df[column] = df[column].astype(str)
+        else:
+            df[column] = df[column]
+    return df
+
+
 def results_to_pandas(results):
     """Return a Google Analytics result set in a Pandas DataFrame.
 
@@ -130,7 +317,8 @@ def results_to_pandas(results):
         if results['rows']:
             rows = results['rows']
 
-            return pd.DataFrame(rows, columns=headings)
+            df = pd.DataFrame(rows, columns=headings)
+            return set_dtypes(df)
 
 
 def get_results(service, final_payload):
