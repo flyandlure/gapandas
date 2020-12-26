@@ -7,6 +7,7 @@ and returns a Google Analytics service for use in other functions.
 """
 
 import socket
+import os.path
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -25,21 +26,27 @@ def get_service(keyfile_path, verbose=False):
     if verbose:
         print('Attempting connection')
 
-    try:
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path,
-                                                                       scopes="https://www.googleapis.com/auth"
-                                                                              "/analytics.readonly")
-        service = build("analytics", "v3", credentials=credentials)
+    if not os.path.exists(keyfile_path):
+        print('Keyfile not found')
+        exit()
 
-        if verbose:
-            print('Connected successfully')
+    else:
 
-        return service
+        try:
+            credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path,
+                                                                           scopes="https://www.googleapis.com/auth"
+                                                                                  "/analytics.readonly")
+            service = build("analytics", "v3", credentials=credentials)
 
-    except Exception as e:
+            if verbose:
+                print('Connected successfully')
 
-        if verbose:
-            print('Connection failed: \
-            Check your client_secrets.json and ensure the email is in your Google Analytics account.')
+            return service
 
-        return e
+        except Exception as e:
+
+            if verbose:
+                print('Connection failed: \
+                Check your client_secrets.json and ensure the email is in your Google Analytics account.')
+
+            return e
