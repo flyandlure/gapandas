@@ -7,6 +7,7 @@ and returns a Google Analytics service for use in other functions.
 """
 
 import socket
+import sys
 import os.path
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
@@ -28,7 +29,7 @@ def get_service(keyfile_path, verbose=False):
 
     if not os.path.exists(keyfile_path):
         print('Keyfile not found')
-        exit()
+        sys.exit()
 
     else:
 

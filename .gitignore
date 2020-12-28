@@ -1,5 +1,6 @@
 venv
 config
+personal_client_secrets.json
 client_secrets.json
 example.py
 .idea
