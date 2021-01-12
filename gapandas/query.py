@@ -9,14 +9,37 @@ import math
 import pandas as pd
 
 
-def run_query(service, view_id: str, payload: dict, output: str = 'df'):
+def show_message(verbose, message):
+    """Show a message if verbose mode is True.
+
+    Args:
+        verbose (bool): True to display messages
+        message (str): Message to display.
+
+    Returns:
+        Print message if verbose mode is True.
+    """
+
+    if verbose:
+        print(message)
+
+
+def run_query(service: object,
+              view_id: str,
+              payload: dict,
+              output: str = 'df',
+              verbose=False):
     """Runs a query against the Google Analytics reporting API and returns the results data.
 
-    :param service: Authenticated Google Analytics service connection
-    :param view_id: Google Analytics view ID to query
-    :param payload: Payload of query parameters to pass to Google Analytics in Python dictionary
-    :param output: String containing the format to return (df or raw)
-    Returns data from Google Analytics or an exception message
+    Args:
+        service (object): Authenticated Google Analytics service connection
+        view_id (int): Google Analytics view ID to query
+        payload (dict): Payload of query parameters to pass to Google Analytics in Python dictionary
+        output (str): String containing the format to return (df or raw)
+        verbose (bool): Turn on verbose messages.
+
+    Returns:
+         Pandas dataframe or raw array
     """
 
     required_payload = {'ids': 'ga:' + view_id}
@@ -24,6 +47,7 @@ def run_query(service, view_id: str, payload: dict, output: str = 'df'):
 
     try:
         results = get_results(service, final_payload)
+        show_message(verbose, results)
 
         if output == 'df':
             return results_to_pandas(results)
@@ -31,7 +55,7 @@ def run_query(service, view_id: str, payload: dict, output: str = 'df'):
             return results
 
     except Exception as e:
-        return e
+        print('Query failed:', str(e))
 
 
 def get_profile_info(results):
@@ -310,7 +334,6 @@ def results_to_pandas(results):
         column_headers = results['columnHeaders']
         headings = []
         for header in column_headers:
-
             name = header['name'].replace('ga:', '')
             headings.append(name)
 
@@ -343,7 +366,6 @@ def get_results(service, final_payload):
         all_rows = []
 
         while start_index <= total_results:
-
             # Determine start_index and add to payload
             start_index_payload = {'start_index': + start_index + 1}
             final_payload = {**final_payload, **start_index_payload}
