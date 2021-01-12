@@ -50,4 +50,5 @@ Pagination is handled automatically. GAPandas will fetch each page of results an
 
 ### Changes
 
-* Version 0.14 - Added `set_dtypes()` function to set the correct dtypes and improved error handling. 
+* Version 0.16 - Added `set_dtypes()` function to set the correct dtypes and improved error handling. 
+* version 0.17 - Fixed bug in use of `exit()`
