@@ -56,7 +56,6 @@ def run_query(service: object,
 
     except Exception as e:
         print('Query failed:', str(e))
-        exit()
 
 
 def get_profile_info(results):
