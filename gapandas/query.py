@@ -31,7 +31,7 @@ def run_query(service, view_id: str, payload: dict, output: str = 'df'):
             return results
 
     except Exception as e:
-        return e
+        print('Query failed:', str(e))
 
 
 def get_profile_info(results):
