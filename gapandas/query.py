@@ -360,7 +360,7 @@ def get_results(service, final_payload):
     items_per_page = get_items_per_page(results)
 
     # Return multiple pages of results
-    if total_pages > 1:
+    if total_pages and total_pages > 1:
 
         start_index = 0
         all_rows = []
