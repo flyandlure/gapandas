@@ -9,7 +9,7 @@ from gapandas import connect
 from gapandas import query
 
 
-def monthly_ecommerce_overview(service, view, start_date, end_date, segment=None, filters=None):
+def monthly_ecommerce_overview(service, view, start_date, end_date, segment=None, filters=None, format=True):
     """Return a dataframe of common ecommerce metrics grouped by year and month.
 
     Args:
@@ -19,7 +19,7 @@ def monthly_ecommerce_overview(service, view, start_date, end_date, segment=None
         end_date (string): Start date in YYYY-MM-DD format.
         segment (string, optional): Optional Google Analytics segment to apply.
         filters (string, optional): Optional Google Analytics filters to apply.
-
+        format (bool, optional): Set to False to return numeric data, or True to add % and £ where relevant
     Returns:
         df (dataframe): Pandas dataframe of results.
 
@@ -55,18 +55,20 @@ def monthly_ecommerce_overview(service, view, start_date, end_date, segment=None
         'revenuePerTransaction': 'AOV',
         'transactionRevenue': 'Revenue',
     })
-    df['Entrances'] = df['Entrances'].map('{:,.0f}'.format)
-    df['Sessions'] = df['Sessions'].map('{:,.0f}'.format)
-    df['Pageviews'] = df['Pageviews'].map('{:,.0f}'.format)
-    df['Transactions'] = df['Transactions'].map('{:,.0f}'.format)
-    df['Conversion rate'] = df['Conversion rate'].map('{:,.2f}%'.format)
-    df['AOV'] = df['AOV'].map('£{:,.2f}'.format)
-    df['Revenue'] = df['Revenue'].map('£{:,.0f}'.format)
+
+    if format:
+        df['Entrances'] = df['Entrances'].map('{:,.0f}'.format)
+        df['Sessions'] = df['Sessions'].map('{:,.0f}'.format)
+        df['Pageviews'] = df['Pageviews'].map('{:,.0f}'.format)
+        df['Transactions'] = df['Transactions'].map('{:,.0f}'.format)
+        df['Conversion rate'] = df['Conversion rate'].map('{:,.2f}%'.format)
+        df['AOV'] = df['AOV'].map('£{:,.2f}'.format)
+        df['Revenue'] = df['Revenue'].map('£{:,.0f}'.format)
 
     return df
 
 
-def monthly_coupons_overview(service, view, start_date, end_date):
+def monthly_coupons_overview(service, view, start_date, end_date, format=True):
     """Return a dataframe of common coupon metrics grouped by year and month.
 
     Args:
@@ -76,6 +78,7 @@ def monthly_coupons_overview(service, view, start_date, end_date):
         end_date (string): Start date in YYYY-MM-DD format.
         segment (string, optional): Optional Google Analytics segment to apply.
         filters (string, optional): Optional Google Analytics filters to apply.
+        format (bool, optional): Set to False to return numeric data, or True to add % and £ where relevant
 
     Returns:
         df (dataframe): Pandas dataframe of results.
@@ -157,18 +160,20 @@ def monthly_coupons_overview(service, view, start_date, end_date):
     df_all = df_all[
         ['Period', 'Coupon transactions', 'Transactions via coupons', 'Coupon revenue', 'Revenue via coupons',
          'Coupon AOV', 'Non-coupon AOV', 'Coupon AOV uplift']]
-    df_all['Coupon transactions'] = df_all['Coupon transactions'].map('{:,.0f}'.format)
-    df_all['Transactions via coupons'] = df_all['Transactions via coupons'].map('{:,.2f}%'.format)
-    df_all['Coupon revenue'] = df_all['Coupon revenue'].map('£{:,.0f}'.format)
-    df_all['Revenue via coupons'] = df_all['Revenue via coupons'].map('{:,.2f}%'.format)
-    df_all['Coupon AOV'] = df_all['Coupon AOV'].map('£{:,.2f}'.format)
-    df_all['Non-coupon AOV'] = df_all['Non-coupon AOV'].map('£{:,.2f}'.format)
-    df_all['Coupon AOV uplift'] = df_all['Coupon AOV uplift'].map('£{:,.2f}'.format)
+
+    if format:
+        df_all['Coupon transactions'] = df_all['Coupon transactions'].map('{:,.0f}'.format)
+        df_all['Transactions via coupons'] = df_all['Transactions via coupons'].map('{:,.2f}%'.format)
+        df_all['Coupon revenue'] = df_all['Coupon revenue'].map('£{:,.0f}'.format)
+        df_all['Revenue via coupons'] = df_all['Revenue via coupons'].map('{:,.2f}%'.format)
+        df_all['Coupon AOV'] = df_all['Coupon AOV'].map('£{:,.2f}'.format)
+        df_all['Non-coupon AOV'] = df_all['Non-coupon AOV'].map('£{:,.2f}'.format)
+        df_all['Coupon AOV uplift'] = df_all['Coupon AOV uplift'].map('£{:,.2f}'.format)
 
     return df_all
 
 
-def monthly_google_ads_overview(service, view, start_date, end_date):
+def monthly_google_ads_overview(service, view, start_date, end_date, format=True):
     """Return a dataframe of common Google Ads grouped by year and month.
 
     Args:
@@ -176,6 +181,7 @@ def monthly_google_ads_overview(service, view, start_date, end_date):
         view (string): Google Analytics view ID.
         start_date (string): Start date in YYYY-MM-DD format.
         end_date (string): Start date in YYYY-MM-DD format.
+        format (bool, optional): Set to False to return numeric data, or True to add % and £ where relevant
 
     Returns:
         df (dataframe): Pandas dataframe of results.
@@ -211,14 +217,16 @@ def monthly_google_ads_overview(service, view, start_date, end_date):
     })
 
     df_all['COS'] = (df_all['Costs'] / df_all['Revenue']) * 100
-    df_all['Entrances'] = df_all['Entrances'].map('{:,.0f}'.format)
-    df_all['Sessions'] = df_all['Sessions'].map('{:,.0f}'.format)
-    df_all['Transactions'] = df_all['Transactions'].map('{:,.0f}'.format)
-    df_all['Conversion rate'] = df_all['Conversion rate'].map('{:,.2f}%'.format)
-    df_all['AOV'] = df_all['AOV'].map('£{:,.2f}'.format)
-    df_all['Revenue'] = df_all['Revenue'].map('£{:,.0f}'.format)
-    df_all['Costs'] = df_all['Costs'].map('£{:,.0f}'.format)
-    df_all['CPC'] = df_all['CPC'].map('£{:,.2f}'.format)
-    df_all['COS'] = df_all['COS'].map('{:,.2f}%'.format)
+
+    if format:
+        df_all['Entrances'] = df_all['Entrances'].map('{:,.0f}'.format)
+        df_all['Sessions'] = df_all['Sessions'].map('{:,.0f}'.format)
+        df_all['Transactions'] = df_all['Transactions'].map('{:,.0f}'.format)
+        df_all['Conversion rate'] = df_all['Conversion rate'].map('{:,.2f}%'.format)
+        df_all['AOV'] = df_all['AOV'].map('£{:,.2f}'.format)
+        df_all['Revenue'] = df_all['Revenue'].map('£{:,.0f}'.format)
+        df_all['Costs'] = df_all['Costs'].map('£{:,.0f}'.format)
+        df_all['CPC'] = df_all['CPC'].map('£{:,.2f}'.format)
+        df_all['COS'] = df_all['COS'].map('{:,.2f}%'.format)
 
     return df_all
